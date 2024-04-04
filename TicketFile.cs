@@ -122,6 +122,104 @@ public class TicketFile
         } while (choice == "Y");
     }
 
+    public void SearchThroughTicketsFile()
+    {
+        Console.WriteLine("Search by:");
+        Console.WriteLine("1. Status");
+        Console.WriteLine("2. Priority");
+        Console.WriteLine("3. Submitter");
+        Console.Write("Enter your choice (1-3): ");
+        int choice = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter the search term: ");
+        string searchTerm = Console.ReadLine();
+
+        int matchCount = 0;
+
+        switch (choice)
+        {
+            case 1:
+                Console.WriteLine("Searching by Status...");
+                matchCount = SearchByStatus(searchTerm);
+                break;
+            case 2:
+                Console.WriteLine("Searching by Priority...");
+                matchCount = SearchByPriority(searchTerm);
+                break;
+            case 3:
+                Console.WriteLine("Searching by Submitter...");
+                matchCount = SearchBySubmitter(searchTerm);
+                break;
+            default:
+                Console.WriteLine("Invalid choice.");
+                return;
+        }
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"Number of matches: {matchCount}");
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
+    private int SearchByStatus(string status)
+    {
+        int matchCount = 0;
+        SearchInFile(ticketsFilePath, 2, status, ref matchCount);
+        return matchCount;
+    }
+
+    private int SearchByPriority(string priority)
+    {
+        int matchCount = 0;
+        SearchInFile(ticketsFilePath, 3, priority, ref matchCount);
+        return matchCount;
+    }
+
+    private int SearchBySubmitter(string submitter)
+    {
+        int matchCount = 0;
+        SearchInFile(ticketsFilePath, 4, submitter, ref matchCount);
+        return matchCount;
+    }
+
+    private void SearchInFile(string filePath, int fieldIndex, string searchTerm, ref int matchCount)
+    {
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    string[] headers = sr.ReadLine().Split(',');
+                    while (!sr.EndOfStream)
+                    {
+                        string[] fields = sr.ReadLine().Split(',');
+                        if (fields[fieldIndex].Equals(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        {
+                            PrintSearchResult(headers, fields);
+                            matchCount++;
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while searching the file: {ex.Message}");
+        }
+    }
+
+    private void PrintSearchResult(string[] headers, string[] fields)
+    {
+        for (int i = 0; i < headers.Length; i++)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{headers[i]} = {fields[i]}");
+            
+        }
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.White;
+    }
+
     private void ReadFromFile(string filePath)
     {
         try
