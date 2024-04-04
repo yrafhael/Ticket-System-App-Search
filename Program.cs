@@ -1,6 +1,6 @@
 ﻿class Program
 {
-     static void Main(string[] args)
+    static void Main(string[] args)
     {
         string ticketsFilePath = "Tickets.csv";
         string enhancementsFilePath = "Enhancements.csv";

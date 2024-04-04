@@ -11,6 +11,21 @@ public class TicketFile
         this.tasksFilePath = tasksFilePath;
     }
 
+    public void ReadDataFromTicketsFile()
+    {
+        ReadFromFile(ticketsFilePath);
+    }
+
+    public void ReadDataFromEnhancementsFile()
+    {
+        ReadFromFile(enhancementsFilePath);
+    }
+
+    public void ReadDataFromTasksFile()
+    {
+        ReadFromFile(tasksFilePath);
+    }
+
 
     public void CreateFileFromData()
     {
@@ -105,5 +120,54 @@ public class TicketFile
             Console.WriteLine("Do you want to add another ticket? (Y/N)");
             choice = Console.ReadLine().ToUpper();
         } while (choice == "Y");
+    }
+
+    private void ReadFromFile(string filePath)
+    {
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    string[] headers = sr.ReadLine().Split(',');
+                    while (!sr.EndOfStream)
+                    {
+                        string[] fields = sr.ReadLine().Split(',');
+                        Console.WriteLine($"{headers[0]} = {fields[0]}");
+                        Console.WriteLine($"{headers[1]} = {fields[1]}");
+                        Console.WriteLine($"{headers[2]} = {fields[2]}");
+                        Console.WriteLine($"{headers[3]} = {fields[3]}");
+                        Console.WriteLine($"{headers[4]} = {fields[4]}");
+                        Console.WriteLine($"{headers[5]} = {fields[5]}");
+                        Console.WriteLine($"{headers[6]} = {fields[6]}");
+                        Console.WriteLine($"{headers[7]} = {fields[7]}");
+
+                        if (filePath == enhancementsFilePath)
+                        {
+                            Console.WriteLine($"{headers[8]} = {fields[8]}");
+                            Console.WriteLine($"{headers[9]} = {fields[9]}");
+                            Console.WriteLine($"{headers[10]} = {fields[10]}");
+                            Console.WriteLine($"{headers[11]} = {fields[11]}");
+                        }
+                        else if (filePath == tasksFilePath)
+                        {
+                            Console.WriteLine($"{headers[8]} = {fields[8]}");
+                            Console.WriteLine($"{headers[9]} = {fields[9]}");
+                        }
+
+                        Console.WriteLine();
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("File does not exist");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while reading the file: {ex.Message}");
+        }
     }
 }
